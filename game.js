@@ -49,3 +49,17 @@ const renderUpgrades = () => {
 };
 
 renderUpgrades();
+
+function buyUpgrades(id){
+    for (let i = 0; i < upgrades.length; i++){
+        if (upgrades[i].id === id){
+            if (score >= upgrades[i].cost){
+                score -= upgrades[i].cost;
+                pointsPerClick += upgrades[i].bonus;
+                updateDisplay();
+                renderUpgrades();
+                return;
+            }
+        }
+    }
+}
