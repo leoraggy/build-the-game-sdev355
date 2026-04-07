@@ -26,6 +26,7 @@ const updateDisplay = () => {
   document.getElementById("score-display").textContent = "Score: " + score;
   document.getElementById("rate-display").textContent =
     "Points per click: " + pointsPerClick;
+  checkCost();
 };
 
 document.getElementById("click-btn").addEventListener("click", () => {
@@ -36,6 +37,11 @@ document.getElementById("click-btn").addEventListener("click", () => {
 const renderUpgrades = () => {
   upgrades.forEach((upgrade) => {
     const upgradeDiv = document.createElement("div");
+    const buyButton = document.createElement("button");
+
+    buyButton.textContent = "Buy";
+    buyButton.setAttribute("onclick", `buyUpgrades(${upgrade.id})`);
+    buyButton.setAttribute("id", `upgrade-${upgrade.id}`);
 
     upgradeDiv.setAttribute("id", upgrade.id);
 
@@ -43,6 +49,7 @@ const renderUpgrades = () => {
     name.textContent = `${upgrade.name} Cost: ${upgrade.cost} Bonus: ${upgrade.bonus}`;
 
     upgradeDiv.appendChild(name);
+    upgradeDiv.appendChild(buyButton);
 
     document.getElementById("upgrades").appendChild(upgradeDiv);
   });
@@ -50,16 +57,27 @@ const renderUpgrades = () => {
 
 renderUpgrades();
 
-function buyUpgrades(id){
-    for (let i = 0; i < upgrades.length; i++){
-        if (upgrades[i].id === id){
-            if (score >= upgrades[i].cost){
-                score -= upgrades[i].cost;
-                pointsPerClick += upgrades[i].bonus;
-                updateDisplay();
-                renderUpgrades();
-                return;
-            }
-        }
+function buyUpgrades(id) {
+  for (let i = 0; i < upgrades.length; i++) {
+    if (upgrades[i].id === id) {
+      if (score >= upgrades[i].cost) {
+        score -= upgrades[i].cost;
+        pointsPerClick += upgrades[i].bonus;
+        updateDisplay();
+        return;
+      }
     }
+  }
 }
+
+const checkCost = () => {
+  upgrades.forEach((upgrade) => {
+    if (score < upgrade.cost) {
+      document.getElementById(`upgrade-${upgrade.id}`).disabled = true;
+    } else {
+      document.getElementById(`upgrade-${upgrade.id}`).disabled = false;
+    }
+  });
+};
+
+checkCost();
